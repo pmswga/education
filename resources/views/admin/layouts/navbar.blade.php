@@ -10,16 +10,13 @@
                     <a class="nav-link" aria-current="page" href="{{ route('admin_index') }}">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{{ route('tests.index') }}">Тесты</a>
+                    <a class="nav-link" aria-current="page" href="{{ route('tests.index') }}">Проверка тестов</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{{ route('admin_settings') }}">Настройки</a>
                 </li>
             </ul>
             <div class="d-flex">
-                <a type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#addCourseModal">
-                    Добавить курс
-                </a>
                 @auth('admin')
                     <form method="POST" action="{{ route('logoutAdmin') }}">
                         @csrf

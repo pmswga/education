@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Test;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -24,7 +25,8 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         return view('courses.edit', [
-           'course' => $course
+           'course' => $course,
+            'tests' => Test::all()->where('course', '=', $course->id)
         ]);
     }
 

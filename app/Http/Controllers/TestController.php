@@ -59,6 +59,7 @@ class TestController extends Controller
         }
 
         $test = new Test();
+        $test->caption = $data['caption'];
         $test->course = $data['course'];
         $test->questions = str_replace("\n", "&", $data['questions']);
 
@@ -118,6 +119,10 @@ class TestController extends Controller
      */
     public function destroy(Test $test)
     {
-        //
+        if (!$test->delete()) {
+            return back()->with('error', 'Не удалось удалить тест');
+        }
+
+        return back()->with('success', 'Тест удалён');
     }
 }

@@ -41,12 +41,9 @@ Route::get('/profile', function () {
 })->name('profile')->middleware('auth:web');
 
 
+Route::get('/course_show/{course}', [\App\Http\Controllers\CourseController::class, 'show'])->name('course_show');
+
 Route::get('/test', function () {
-
-
-    print_r('<pre>');
-    print_r(CourseProgress::getProgressPrecentByCourse(2));
-    print_r('</pre>');
 
 });
 
@@ -77,7 +74,6 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/course_store', [\App\Http\Controllers\CourseController::class, 'store'])->name('course_store');
     Route::put('/course_update/{course}', [\App\Http\Controllers\CourseController::class, 'update'])->name('course_update');
-    Route::get('/course_show/{course}', [\App\Http\Controllers\CourseController::class, 'show'])->name('course_show');
     Route::get('/course_edit/{course}', [\App\Http\Controllers\CourseController::class, 'edit'])->name('course_edit');
     Route::delete('/course_delete/{course}', [\App\Http\Controllers\CourseController::class, 'destroy'])->name('course_delete');
 
@@ -88,6 +84,7 @@ Route::prefix('admin')->group(function () {
 
     Route::resource('/tests', \App\Http\Controllers\TestController::class);
     Route::resource('/tests_progress', \App\Http\Controllers\TestProgressController::class);
+
     Route::post('/test_progress_set_status/{testProgress}', [\App\Http\Controllers\TestProgressController::class, 'test_progress_set_status'])->name('test_progress_set_status');
     Route::post('/test_progress_set_mark/{testProgress}', [\App\Http\Controllers\TestProgressController::class, 'test_progress_set_mark'])->name('test_progress_set_mark');
     Route::get('/passing_test/{test}', [\App\Http\Controllers\TestController::class, 'passing_test'])->name('passing_test');

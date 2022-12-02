@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Добавить урок</button>
+                    <button type="submit" class="btn btn-primary">Добавить курс</button>
                 </div>
             </form>
         </div>

@@ -42,6 +42,7 @@ class User extends Authenticatable
     public function isLessonCompleted(int $lesson)
     {
         $lesson = CourseProgress::all()
+            ->where('user', '=', $this->id)
             ->where('lesson', '=', $lesson)
             ->first();
 

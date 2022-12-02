@@ -40,16 +40,14 @@ class TestProgressController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'user' => 'required',
             'test' => 'required',
-            'answers[]' => 'required',
+//            'answers[]' => 'required',
         ], [
-            'user.required' => 'Необходимо указать пользователя',
             'test.required' => 'Необходимо указать тест',
-            'answers[].required' => 'Необходимо ответить на вопросы',
+//            'answers[].required' => 'Необходимо ответить на вопросы',
         ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails() && isset($data['answers'])) {
             return back()->withErrors($validator->errors());
         }
 
@@ -143,8 +141,12 @@ class TestProgressController extends Controller
      * @param  \App\Models\TestProgress  $testProgress
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TestProgress $testProgress)
+    public function destroy(TestProgress $tests_progress)
     {
-        //
+        if (!$tests_progress->delete()) {
+            return back()->with('error', 'Не удалось удалить пройденный тест');
+        }
+
+        return back()->with('success', 'Пройденный тест удалён');
     }
 }

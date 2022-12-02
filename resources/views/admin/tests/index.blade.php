@@ -22,19 +22,22 @@
                             <th>Ответы</th>
                             <th>Статус</th>
                             <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($tests_progress as $test_progress)
                             <tr>
                                 <td>{{ $loop->index+1 }}</td>
-                                <td>{{ $test_progress->getUser()->getFio() }}</td>
-                                <td>{{ $test_progress->getTest()->caption }}</td>
+                                <td>{{ is_null($test_progress->getUser()) ? 'пользователь был удалён' : $test_progress->getUser()->getFio(); }}</td>
+                                <td>{{ is_null($test_progress->getTest()) ? 'тест был удалён' : $test_progress->getTest()->caption; }}</td>
                                 <td>
                                     <ul>
-                                        @foreach($test_progress->getTest()->getQuestions() as $question)
+                                        @if($test_progress->getTest())
+                                            @foreach($test_progress->getTest()->getQuestions() as $question)
                                             <li>{{ $question }}</li>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </ul>
                                 </td>
                                 <td>
@@ -74,94 +77,21 @@
                                         Оценка по тесту {{ $test_progress->mark }}
                                     @endif
                                 </td>
+                                <td>
+                                    <form method="POST" action="{{ route('tests_progress.destroy', $test_progress) }}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('Действительно удалить пройденный тест?')">
+                                            Удалить
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    Добавление теста
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('tests.store') }}">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label">Название</label>
-                            <input type="text" name="caption" class="form-control @error('caption') is-invalid @enderror" value="{{ old('caption') }}">
-                            @error('caption')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Курс</label>
-                            <select class="form-control @error('course') is-invalid @enderror" name="course">
-                                @foreach($courses as $course)
-                                    <option value="{{ $course->id }}">{{ $course->caption }}</option>
-                                @endforeach
-                            </select>
-                            @error('course')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Вопросы</label>
-                            <textarea name="questions" class="form-control @error('questions') is-invalid @enderror" cols="30" rows="10">{{ old('questions') }}</textarea>
-                            @error('questions')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="">
-                            <button type="submit" class="btn btn-primary">Добавить тест</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Название</th>
-                        <th>Курс</th>
-                        <th>Вопросы</th>
-                        <th>Дата создания</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($tests as $test)
-                        <tr>
-                            <td>{{ $loop->index+1 }}</td>
-                            <td>{{ $test->caption }}</td>
-                            <td>{{ $test->getCourse()->caption }}</td>
-                            <td>
-                                <ul>
-                                    @foreach($test->getQuestions() as $question)
-                                        <li>{{ $question }}</li>
-                                    @endforeach
-                                </ul>
-                            </td>
-                            <td>
-                                {{ $test->getCreatedAt() }}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
     </div>
 

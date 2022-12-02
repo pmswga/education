@@ -19,13 +19,13 @@
             {{ $course->description }}
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <hr>
-            <h3>Уроки</h3>
-        </div>
-    </div>
     @auth('web')
+        <div class="row">
+            <div class="col">
+                <hr>
+                <h3>Уроки</h3>
+            </div>
+        </div>
         <div class="row">
             <div class="col">
                 <div class="accordion" id="courseLessons">
@@ -33,7 +33,6 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#lesson_{{ $loop->index+1 }}" aria-expanded="false" aria-controls="collapseTwo">
-
                                     @if(Auth::user()->isLessonCompleted($lesson->id))
                                         <label class="me-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
@@ -58,6 +57,8 @@
                                                         Отметить пройденным
                                                     </button>
                                                 </form>
+                                            @else
+                                                <b>Дата отметки:</b>&nbsp;{{ \Illuminate\Support\Carbon::make($lesson->created_at)->format('d.m.Y H:i:s') }}
                                             @endif
                                         </div>
                                     </div>
@@ -68,60 +69,60 @@
                 </div>
             </div>
         </div>
-    @endauth
-    <div class="row">
-        <div class="col">
-            <hr>
-            <h3>Доступные тесты</h3>
+        <div class="row">
+            <div class="col">
+                <hr>
+                <h3>Доступные тесты</h3>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Курс</th>
-                    <th>Вопросы</th>
-                    <th>Дата создания</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($course->getTests() as $test)
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td>{{ $loop->index+1 }}</td>
-                        <td>{{ $test->getCourse()->caption }}</td>
-                        <td>
-                            <ul>
-                                @foreach($test->getQuestions() as $question)
-                                    <li>{{ $question }}</li>
-                                @endforeach
-                            </ul>
-                        </td>
-                        <td>
-                            {{ $test->getCreatedAt() }}
-                        </td>
-                        <td>
-                            @if(Auth::user()->isTestPassed($test->id))
-                                @php $test_progress = \App\Models\TestProgress::all()->where('test', '=', $test->id)->first() @endphp
-                                @isset($test_progress)
-                                    @if($test_progress->status === "TO CHECK")
-                                        Твой тест отпарвлен на проверку
-                                    @elseif($test_progress->status === "CHECKING")
-                                        Твой тест проверяют
-                                    @elseif($test_progress->status === "CHECKED")
-                                        Твоя оценка по тесту: {{ $test_progress->mark }}
-                                    @endif
-                                @endisset
-                            @else
-                                <a class="btn btn-primary" href="{{ route('passing_test', $test) }}">Пройти тест</a>
-                            @endif
-                        </td>
+                        <th>#</th>
+                        <th>Курс</th>
+                        <th>Вопросы</th>
+                        <th>Дата создания</th>
+                        <th></th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach($course->getTests() as $test)
+                        <tr>
+                            <td>{{ $loop->index+1 }}</td>
+                            <td>{{ $test->getCourse()->caption }}</td>
+                            <td>
+                                <ul>
+                                    @foreach($test->getQuestions() as $question)
+                                        <li>{{ $question }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td>
+                                {{ $test->getCreatedAt() }}
+                            </td>
+                            <td>
+                                @if(Auth::user()->isTestPassed($test->id))
+                                    @php $test_progress = \App\Models\TestProgress::all()->where('test', '=', $test->id)->first() @endphp
+                                    @isset($test_progress)
+                                        @if($test_progress->status === "TO CHECK")
+                                            Твой тест отпарвлен на проверку
+                                        @elseif($test_progress->status === "CHECKING")
+                                            Твой тест проверяют
+                                        @elseif($test_progress->status === "CHECKED")
+                                            <a class="btn btn-primary" href="{{ route('passing_test', $test) }}">Посмотреть результаты</a>
+                                        @endif
+                                    @endisset
+                                @else
+                                    <a class="btn btn-primary" href="{{ route('passing_test', $test) }}">Пройти тест</a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    @endauth
 @endsection

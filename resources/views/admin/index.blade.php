@@ -7,6 +7,13 @@
 
     <div class="row mt-5"></div>
     <div class="row mb-3">
+        <div class="d-flex justify-content-end">
+            <a type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                Добавить курс
+            </a>
+        </div>
+    </div>
+    <div class="row mb-3">
         <div class="col">
             <div class="card">
                 <div class="card-header">
