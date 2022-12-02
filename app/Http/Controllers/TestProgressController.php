@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
+use App\Models\CourseProgress;
 use App\Models\TestProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,6 +60,34 @@ class TestProgressController extends Controller
 
         if (!$test_progress->save()) {
             return back()->with('error', 'Не удалось завершить тест');
+        }
+
+        $test_progress_count = TestProgress::all()->where('user', '=', Auth::user()->id)->count();
+
+        if ($test_progress_count > 0) {
+
+            $ach = '';
+            switch ($test_progress_count) {
+                case 1:
+                    $ach = 'Ваш первый тест';
+                    break;
+                case 5:
+                    $ach = 'Бронзовая медаль за тесты. Вы прошли 5 тестов';
+                    break;
+                case 10:
+                    $ach = 'Серебрянная медаль за тесты. Вы прошли 10 тестов';
+                    break;
+                case 15;
+                    $ach = 'Золотая медаль за тесты. Вы прошли 15 тестов';
+                    break;
+            }
+
+            if (!empty($ach)) {
+                $result = Achievement::addAchievement(Auth::user()->id, $ach);
+                if ($result) {
+                    return back()->with('success', 'Тест завершён')->with('achievement', $ach);
+                }
+            }
         }
 
         return back()->with('success', 'Тест завершён');

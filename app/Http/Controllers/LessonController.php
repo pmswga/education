@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
 use App\Models\CourseProgress;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
@@ -50,6 +51,34 @@ class LessonController extends Controller
 
         if (!$courseProgress->save()) {
             return back()->with('error', 'Не удалось отметить урок пройденным');
+        }
+
+        $lesson_user_count = CourseProgress::all()->where('user', '=', Auth::user()->id)->count();
+
+        if ($lesson_user_count > 0) {
+
+            $ach = '';
+            switch ($lesson_user_count) {
+                case 1:
+                    $ach = 'Дорога в тысячу ли начинается с первого шага';
+                    break;
+                case 5:
+                    $ach = 'Бронзовая медаль за уроки. Вы прошли 5 уроков';
+                    break;
+                case 10:
+                    $ach = 'Серебрянная медаль за уроки. Вы прошли 10 уроков';
+                    break;
+                case 15;
+                    $ach = 'Золотая медаль за уроки. Вы прошли 15 уроков';
+                    break;
+            }
+
+            if (!empty($ach)) {
+                $result = Achievement::addAchievement(Auth::user()->id, $ach);
+                if ($result) {
+                    return back()->with('success', 'Урок отмечен как пройденный')->with('achievement', $ach);
+                }
+            }
         }
 
         return back()->with('success', 'Урок отмечен как пройденный');

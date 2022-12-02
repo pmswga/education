@@ -37,7 +37,9 @@ Route::get('/registration', function () {
 Route::post('/registration_user', [\App\Http\Controllers\UserController::class, 'registerUser'])->name('registrationUser');
 
 Route::get('/profile', function () {
-   return view('profile');
+   return view('profile', [
+       'achievements' => \App\Models\Achievement::all()->where('user', '=', Auth::user()->id)
+   ]);
 })->name('profile')->middleware('auth:web');
 
 
