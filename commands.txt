@@ -1,0 +1,57 @@
+Что нам надо:
+	composer - менеджер пакетов (библиотек)
+	php8.1 - сам язык
+	laravel 9.0 - сам фреймворк для разработки сайта
+
+Команды:
+	composer create-project laravel/laravel:^9.0 edu
+							 ^                    ^
+							 |                    |
+							 |                    папка проекта
+							 | версия laravel
+
+В корне проекта иногда надо выполнить composer install в корне папки.
+
+
+Эта команда выполняется в edu/public
+
+	php -S localhost:80 - запуск dev-сервера
+
+
+Все команды выполняются в корне папки edu и должны быть настроены php и composer
+
+	php artisan migrate - создание всех миграций (таблиц)
+
+	php artisan migrate:refresh - пересоздание миграций (удаляет все данные)
+
+	php artisan make:migration create_courses - создание миграции courses
+
+	php artisan make:model Course - создание модели для таблицы courses 
+
+	php artisan make:controller CourseController - создание контроллера для модели Course
+
+	php artisan make:controller TestController --resource --model=Test - автоматическое создание контроллера с методами CRUD (create|read|update|delete) 
+
+	php artisan storage:link - сделать ссылку из папки public в папку storage
+
+Папки проекта laravel:
+	
+	./.env - файл настроек
+
+	public/ - папка, в которую обычно "заходит" пользователь
+
+	routes/web.php - здесь описываются маршруты сайта 
+
+	resources/views - здесь хранятся html-страницы, описываемые с помощью шаблонизатора Blade
+
+	databases/migrations - здесь хранятся php-скрипты, описывающие таблицы в базе данных (миграции).
+
+	config/app.php - конфигурация приложения
+
+	config/auth.php - конфигурация аутентификации/авторизации
+
+	app/Http/Controllers - контроллеры (бизнес-логика приложения)
+
+	app/Models - модели (данные приложения)
+
+
